@@ -1,0 +1,7 @@
+# regeneration virtualenv
+.venv/
+
+# local render scratch
+out-*.png
+_*.svg
+_*.png

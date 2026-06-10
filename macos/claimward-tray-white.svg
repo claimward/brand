@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="claimward tray icon (white)">
+  <!-- White mark on transparent, for dark menu bars. Simplified for ~16-18px. -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 18 H48 V33 Q48 44 32 51 Q16 44 16 33 Z"/>
+    <path d="M32 21 L26.6 24.1 L26.6 30.3 L32 33.4 L37.4 30.3 L37.4 24.1 Z"/>
+    <path d="M32 33.4 V43"/>
+    <path d="M32 43 H38"/>
+  </g>
+</svg>
