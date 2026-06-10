@@ -4,6 +4,8 @@
 
 # Brand assets
 
+[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/license/bsd-3-clause)
+
 Canonical home for the **claimward** visual identity. Other repos and the docs
 site should link assets from here (raw URLs) rather than keeping their own copies.
 
