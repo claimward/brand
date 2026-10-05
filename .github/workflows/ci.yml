@@ -1,0 +1,70 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  assets:
+    name: assets and licences
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libxml2-utils file
+
+      # Every SVG is linked from other repositories and the docs as a raw URL:
+      # one that does not parse is a broken logo everywhere at once.
+      - name: SVGs parse
+        run: |
+          set -eu
+          n=0
+          for f in $(git ls-files '*.svg'); do xmllint --noout "$f"; n=$((n+1)); done
+          echo "$n SVGs parse"
+          [ "$n" -gt 0 ]
+
+      # The sizes the README promises (and macOS expects of a template image
+      # set: 18, 36 and 54 px). A regenerated PNG at the wrong size would look
+      # fine in a viewer and blur in the menu bar.
+      - name: PNGs have their documented sizes
+        run: |
+          set -eu
+          check() {
+            got=$(file -b "$1" | sed -n 's/^PNG image data, \([0-9]*\) x \([0-9]*\),.*/\1x\2/p')
+            [ "$got" = "$2" ] || { echo "::error file=$1::$1 is ${got:-not a PNG}, the README says $2"; exit 1; }
+            echo "$1 $got"
+          }
+          check avatar/avatar-512.png 512x512
+          check favicon/apple-touch-180.png 180x180
+          check favicon/favicon-16.png 16x16
+          check favicon/favicon-32.png 32x32
+          check favicon/favicon-512.png 512x512
+          check macos/claimward-trayTemplate.png 18x18
+          check macos/claimward-trayTemplate@2x.png 36x36
+          check macos/claimward-trayTemplate@3x.png 54x54
+          check macos/tray-white-18.png 18x18
+          check macos/tray-white@2x.png 36x36
+          # A PNG added without a line above is not checked: say so.
+          listed=10
+          have=$(git ls-files '*.png' | wc -l)
+          [ "$have" -eq "$listed" ] || { echo "::error::$have PNGs, $listed checked: add the new ones to this list"; exit 1; }
+
+      # The SIL OFL requires its text to accompany the fonts it covers.
+      - name: Licences travel with what they cover
+        run: |
+          set -eu
+          [ -s LICENSE ] || { echo "::error::LICENSE is missing"; exit 1; }
+          for f in $(git ls-files '*.woff2' '*.ttf' '*.otf'); do
+            d=$(dirname "$f")
+            if ! { [ -s "$d/OFL.txt" ] && grep -q "SIL OPEN FONT LICENSE Version 1.1" "$d/OFL.txt"; }; then
+              echo "::error file=$f::$f has no OFL.txt beside it"; exit 1
+            fi
+            echo "$f: $d/OFL.txt"
+          done
