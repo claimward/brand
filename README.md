@@ -38,7 +38,7 @@ favicon/   claimward-favicon.svg     simplified small-size mark
 macos/     claimward-tray-Template.svg   menu-bar TEMPLATE (black+alpha; macOS tints it)
            claimward-trayTemplate.png @2x @3x   (18 / 36 / 54 px)
            claimward-tray-white.svg, tray-white-18.png @2x   hard white, dark-only
-src/       outline.py + Inter-*.woff2            regenerate the outlined wordmark
+src/       outline.py + Inter-*.woff2 + OFL.txt   regenerate the outlined wordmark
 ```
 
 ## Usage notes
@@ -64,4 +64,7 @@ rsvg-convert -w 512 avatar/claimward-badge.svg -o avatar/avatar-512.png
 
 ---
 
-Licensed BSD-3-Clause like the rest of claimward. Inter is under the SIL Open Font License.
+Licensed BSD-3-Clause like the rest of claimward ([LICENSE](LICENSE)). The Inter
+fonts in `src/` are © The Inter Project Authors, under the SIL Open Font License
+1.1, whose text travels with them as the licence requires ([src/OFL.txt](src/OFL.txt),
+from [rsms/inter](https://github.com/rsms/inter)).
