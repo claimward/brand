@@ -38,7 +38,8 @@ favicon/   claimward-favicon.svg     simplified small-size mark
 macos/     claimward-tray-Template.svg   menu-bar TEMPLATE (black+alpha; macOS tints it)
            claimward-trayTemplate.png @2x @3x   (18 / 36 / 54 px)
            claimward-tray-white.svg, tray-white-18.png @2x   hard white, dark-only
-src/       outline.py + Inter-*.woff2 + OFL.txt   regenerate the outlined wordmark
+src/       Inter-Medium.woff2, Inter-Bold.woff2 + OFL.txt   the wordmark's fonts (also served by the docs site)
+cmd/outline/   Go tool that outlines the wordmark into claimward-lockup.svg (go.mod at the root)
 ```
 
 ## Usage notes
@@ -52,9 +53,19 @@ src/       outline.py + Inter-*.woff2 + OFL.txt   regenerate the outlined wordma
 ## Regenerate the outlined wordmark
 
 ```sh
-python3 -m venv .venv && .venv/bin/pip install "fonttools[woff]" brotli
-.venv/bin/python src/outline.py     # rewrites logo/claimward-lockup.svg
+go run ./cmd/outline     # rewrites logo/claimward-lockup.svg
 ```
+
+It draws `claim` from `src/Inter-Medium.woff2` and `ward` from
+`src/Inter-Bold.woff2` at 30 px with −0.5 px letter spacing, in `#0D9488` and
+`#134E4A`, beside the mark. It is pure Go (the WOFF2 files are decoded by
+[go-opentype](https://github.com/go-opentype/opentype)), and needs only a Go
+toolchain at the version `go.mod` names.
+
+The output is byte-for-byte the file a fontTools script produced before it, and
+CI holds it there: it runs the tool and fails when `logo/claimward-lockup.svg`
+differs from what is committed. Change the font or a parameter, and commit the
+regenerated logo with it.
 
 Render PNGs with `rsvg-convert`, e.g.:
 

@@ -68,3 +68,37 @@ jobs:
             fi
             echo "$f: $d/OFL.txt"
           done
+
+  wordmark:
+    name: outlined wordmark
+    runs-on: ubuntu-latest
+    env:
+      GOWORK: "off"
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+
+      - name: gofmt
+        run: |
+          out=$(gofmt -l .)
+          [ -z "$out" ] || { echo "::error::not gofmt-clean:"; echo "$out"; exit 1; }
+
+      - name: vet
+        run: go vet ./...
+
+      - name: test
+        run: go test ./...
+
+      # The logo is generated, and committed so that it can be linked as a raw
+      # URL. Regenerate it here: a committed file that the tool no longer
+      # produces, from a font or a parameter changed on one side only, fails.
+      - name: logo/claimward-lockup.svg is what the tool writes
+        run: |
+          go run ./cmd/outline
+          git diff --exit-code -- logo/claimward-lockup.svg || {
+            echo "::error file=logo/claimward-lockup.svg::differs from what go run ./cmd/outline writes; run it and commit the result"
+            exit 1
+          }
