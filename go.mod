@@ -1,6 +1,6 @@
 module github.com/claimward/brand
 
-go 1.27.2
+go 1.27.3
 
 require github.com/go-opentype/opentype v0.16.1
 
